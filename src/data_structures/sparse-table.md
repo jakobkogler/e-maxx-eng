@@ -58,6 +58,17 @@ For this type of queries, we want to find the sum of all values in a range.
 Therefore the natural definition of the function $f$ is $f(x, y) = x + y$. 
 We can construct the data structure with:
 
+<!--- begin test sum_queries
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+const int MAXN = 1e7;
+const int K = 25;
+const int N = 100;
+int arr[N];
+```
+-->
+
 ```cpp
 long long st[MAXN][K];
 
@@ -88,6 +99,20 @@ long long sum_query(int L, int R) {
 ```
 
 Time complexity for a Range Sum Query is $O(K) = O(\log \text{MAXN})$.
+
+<!---
+```
+int main() {
+    iota(begin(arr), end(arr), 0);
+    precompute();
+    for (int L = 0; L < N; L++) {
+        for (int R = L; R < N; R++) {
+            TEST_EQ((L + R) * (R - L + 1) / 2, sum_query(L, R));
+        }
+    }
+}
+```
+end test -->
 
 ### Range Minimum Queries (RMQ)
 
