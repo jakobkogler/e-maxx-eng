@@ -61,24 +61,29 @@ We can construct the data structure with:
 ```cpp
 long long st[MAXN][K];
 
-for (int i = 0; i < N; i++) 
-    st[i][0] = array[i];
+void precompute() {
+    for (int i = 0; i < N; i++) 
+        st[i][0] = arr[i];
 
-for (int j = 1; j <= K; j++) 
-    for (int i = 0; i + (1 << j) <= N; i++) 
-        st[i][j] = st[i][j-1] + st[i + (1 << (j - 1))][j - 1];
+    for (int j = 1; j <= K; j++) 
+        for (int i = 0; i + (1 << j) <= N; i++) 
+            st[i][j] = st[i][j-1] + st[i + (1 << (j - 1))][j - 1];
+}
 ```
 
 To answer the sum query for the range $\[L, R\]$, we iterate over all powers of two, starting from the biggest one.
 As soon as a power of two $2^j$ is smaller or equal to the length of the range ($= R - L + 1$), we process the first the first part of range $\[L, L + 2^j - 1\]$, and continue with the remaining range $\[L + 2^j, R\]$.  
 
 ```cpp
-long long sum = 0;
-for (int j = K; j >= 0; j--) {
-    if ((1 << j) <= R - L + 1) {
-        sum += st[L][j];
-        L += 1 << j;
+long long sum_query(int L, int R) {
+    long long sum = 0;
+    for (int j = K; j >= 0; j--) {
+        if ((1 << j) <= R - L + 1) {
+            sum += st[L][j];
+            L += 1 << j;
+        }
     }
+    return sum;
 }
 ```
 
