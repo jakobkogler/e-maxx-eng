@@ -1,0 +1,9 @@
+language: cpp
+
+compiler:
+  - gcc
+
+script:
+  - cd test
+  - python extract_test.py
+  - ./test.sh
