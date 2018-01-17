@@ -94,7 +94,6 @@ long long sum_query(int L, int R) {
             L += 1 << j;
         }
     }
-    return sum;
 }
 ```
 
