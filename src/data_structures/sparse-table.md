@@ -58,31 +58,61 @@ For this type of queries, we want to find the sum of all values in a range.
 Therefore the natural definition of the function $f$ is $f(x, y) = x + y$. 
 We can construct the data structure with:
 
+<!--- begin test sum_queries
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+const int MAXN = 1e7;
+const int K = 25;
+const int N = 100;
+int arr[N];
+```
+-->
+
 ```cpp
 long long st[MAXN][K];
 
-for (int i = 0; i < N; i++) 
-    st[i][0] = array[i];
+void precompute() {
+    for (int i = 0; i < N; i++) 
+        st[i][0] = arr[i];
 
-for (int j = 1; j <= K; j++) 
-    for (int i = 0; i + (1 << j) <= N; i++) 
-        st[i][j] = st[i][j-1] + st[i + (1 << (j - 1))][j - 1];
+    for (int j = 1; j <= K; j++) 
+        for (int i = 0; i + (1 << j) <= N; i++) 
+            st[i][j] = st[i][j-1] + st[i + (1 << (j - 1))][j - 1];
+}
 ```
 
 To answer the sum query for the range $\[L, R\]$, we iterate over all powers of two, starting from the biggest one.
 As soon as a power of two $2^j$ is smaller or equal to the length of the range ($= R - L + 1$), we process the first the first part of range $\[L, L + 2^j - 1\]$, and continue with the remaining range $\[L + 2^j, R\]$.  
 
 ```cpp
-long long sum = 0;
-for (int j = K; j >= 0; j--) {
-    if ((1 << j) <= R - L + 1) {
-        sum += st[L][j];
-        L += 1 << j;
+long long sum_query(int L, int R) {
+    long long sum = 0;
+    for (int j = K; j >= 0; j--) {
+        if ((1 << j) <= R - L + 1) {
+            sum += st[L][j];
+            L += 1 << j;
+        }
     }
+    return sum;
 }
 ```
 
 Time complexity for a Range Sum Query is $O(K) = O(\log \text{MAXN})$.
+
+<!---
+```
+int main() {
+    iota(begin(arr), end(arr), 0);
+    precompute();
+    for (int L = 0; L < N; L++) {
+        for (int R = L; R < N; R++) {
+            TEST_EQ((L + R) * (R - L + 1) / 2, sum_query(L, R));
+        }
+    }
+}
+```
+end test -->
 
 ### Range Minimum Queries (RMQ)
 
